@@ -194,7 +194,9 @@ dialogModule.provider("$dialog", function(){
       if(this.options.keyboard){ body.unbind('keydown', this.handledEscapeKey); }
       if(this.options.backdrop && this.options.backdropClick){ this.backdropEl.unbind('click', this.handleBackDropClick); }
 
-      if(this.unregisterLocationListener) this.unregisterLocationListener();
+      if(this.unregisterLocationListener) {
+        this.unregisterLocationListener();
+      }
     };
 
     Dialog.prototype._onCloseComplete = function(result) {
