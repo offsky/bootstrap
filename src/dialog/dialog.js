@@ -66,6 +66,7 @@ dialogModule.provider("$dialog", function(){
 
       var self = this, options = this.options = angular.extend({}, defaults, globalOptions, opts);
       this._open = false;
+      this.unregisterLocationListener = null; //a reference to the function to stop listenting to location change events when closed
 
       this.backdropEl = createElement(options.backdropClass);
       if(options.backdropFade){
@@ -186,12 +187,14 @@ dialogModule.provider("$dialog", function(){
       if(this.options.keyboard){ body.bind('keydown', this.handledEscapeKey); }
       if(this.options.backdrop && this.options.backdropClick){ this.backdropEl.bind('click', this.handleBackDropClick); }
 
-      this.$scope.$on('$locationChangeSuccess', this.handleLocationChange);
+      this.unregisterLocationListener = this.$scope.$on('$locationChangeSuccess', this.handleLocationChange);
     };
 
     Dialog.prototype._unbindEvents = function() {
       if(this.options.keyboard){ body.unbind('keydown', this.handledEscapeKey); }
       if(this.options.backdrop && this.options.backdropClick){ this.backdropEl.unbind('click', this.handleBackDropClick); }
+
+      if(this.unregisterLocationListener) this.unregisterLocationListener();
     };
 
     Dialog.prototype._onCloseComplete = function(result) {
